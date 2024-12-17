@@ -339,9 +339,62 @@ const getCollegeById = async (req, res) => {
     });
   }
 };
+const getAllColleges = async (req, res) => {
+  try {
+    // Destructure query parameters for filtering, pagination, and sorting
+    const {
+      page = 1,
+      limit = 10,
+      sortBy = "createdAt",
+      order = "desc",
+      city,
+      state,
+      name,
+    } = req.query;
+
+    // Build a dynamic filter object
+    const filter = {};
+    if (city) filter.city = { $regex: city, $options: "i" }; // Case-insensitive city filter
+    if (state) filter.state = { $regex: state, $options: "i" }; // Case-insensitive state filter
+    if (name) filter.name = { $regex: name, $options: "i" }; // Case-insensitive name filter
+
+    // Parse sorting order
+    const sortOrder = order === "asc" ? 1 : -1;
+
+    // Fetch records with filtering, pagination, and sorting
+    const colleges = await College.find(filter)
+      .sort({ [sortBy]: sortOrder }) // Dynamic sorting
+      .skip((page - 1) * limit) // Pagination: skip records
+      .limit(parseInt(limit)); // Pagination: limit records
+
+    // Total count of matching records
+    const total = await College.countDocuments(filter);
+
+    return res.status(200).json({
+      status: true,
+      message: "Colleges retrieved successfully.",
+      data: {
+        colleges,
+        pagination: {
+          totalRecords: total,
+          currentPage: parseInt(page),
+          totalPages: Math.ceil(total / limit),
+        },
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching colleges:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Failed to retrieve colleges.",
+      data: false,
+    });
+  }
+};
 module.exports = {
   createCollege,
   updateCollege,
   deleteCollege,
   getCollegeById,
+  getAllColleges,
 };

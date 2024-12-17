@@ -1,5 +1,5 @@
-const College = require("./college.model");
-const Program = require("./program.model");
+const College = require("./College.model");
+const Program = require("./Program.model");
 
 module.exports = {
   College,
