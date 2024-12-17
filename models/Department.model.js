@@ -17,13 +17,6 @@ const departmentSchema = new mongoose.Schema(
       default: "",
       trim: true,
     },
-    departmentCode: {
-      type: String,
-      required: [true, "Department code is required"],
-      unique: true,
-      uppercase: true,
-      trim: true,
-    },
     status: {
       type: Boolean,
       default: true,

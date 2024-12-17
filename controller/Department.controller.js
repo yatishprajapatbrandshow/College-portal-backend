@@ -3,10 +3,10 @@ const { Department } = require("../models");
 // Create a new Department
 const createDepartment = async (req, res) => {
   try {
-    const { name, short_name, description, departmentCode, status } = req.body;
+    const { name, short_name, description, status } = req.body;
 
-    // Check if departmentCode already exists
-    const existingDepartment = await Department.findOne({ departmentCode });
+    // Check if name already exists
+    const existingDepartment = await Department.findOne({ name });
     if (existingDepartment) {
       return res.status(400).json({
         status: false,
@@ -19,7 +19,6 @@ const createDepartment = async (req, res) => {
       name,
       short_name,
       description,
-      departmentCode,
       status,
     });
 
@@ -86,7 +85,7 @@ const getDepartmentById = async (req, res) => {
 const updateDepartment = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, short_name, description, departmentCode, status } = req.body;
+    const { name, short_name, description, status } = req.body;
 
     // Check if department exists
     const department = await Department.findById(id);
@@ -96,23 +95,10 @@ const updateDepartment = async (req, res) => {
         message: "Department not found.",
       });
     }
-
-    // Validate unique departmentCode
-    if (departmentCode && departmentCode !== department.departmentCode) {
-      const duplicate = await Department.findOne({ departmentCode });
-      if (duplicate) {
-        return res.status(400).json({
-          status: false,
-          message: "Department code already exists.",
-        });
-      }
-    }
-
     // Update department fields
     department.name = name || department.name;
     department.short_name = short_name || department.short_name;
     department.description = description || department.description;
-    department.departmentCode = departmentCode || department.departmentCode;
     department.status = status !== undefined ? status : department.status;
 
     const updatedDepartment = await department.save();
