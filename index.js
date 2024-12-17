@@ -13,10 +13,12 @@ app.use(cors()); // To parse JSON request bodies
 app.use(express.json()); // To parse JSON request bodies
 
 // Import Routers
-const { CollegeRouter } = require("./routes");
+const { CollegeRouter, ProgramRouter } = require("./routes");
 
 // Routes Started
 app.use("/api/college", CollegeRouter);
+
+app.use("/api/program", ProgramRouter);
 
 // Routes Ended
 
