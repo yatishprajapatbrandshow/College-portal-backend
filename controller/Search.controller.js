@@ -131,7 +131,15 @@ const search = async (req, res) => {
     // Execute aggregation pipeline
     const results = await mongoose.model("ProgramMapped").aggregate(pipeline);
 
-    res.status(200).json({
+    if (!results || results.length === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "No search results found",
+        data: [],
+      });
+    }
+
+    return res.status(200).json({
       status: true,
       message: "Search results retrieved successfully",
       data: results,
