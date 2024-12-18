@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const programSchema = new mongoose.Schema(
+const programMappedSchema = new mongoose.Schema(
   {
     college_id: {
       type: mongoose.Schema.Types.ObjectId,
@@ -38,6 +38,6 @@ const programSchema = new mongoose.Schema(
   { timestapms: true }
 );
 
-const Program = mongoose.model("Program", programSchema);
+const ProgramMapped = mongoose.model("ProgramMapped", programMappedSchema);
 
-module.exports = Program;
+module.exports = ProgramMapped;
