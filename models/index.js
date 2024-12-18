@@ -1,4 +1,4 @@
-const Program = require("./Program.model");
+const Program = require("./Program.model.js");
 const Accommodation = require ("./Accommodation.model");
 const Stream = require("./Stream.model");
 const ProgramMapped =require("./ProgramMapped.model");
