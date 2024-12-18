@@ -1,6 +1,6 @@
 const Accommodation= require('../models'); 
 // Create a new Accommodation
-exports.createAccommodation = async (req, res) => {
+const createAccommodation = async (req, res) => {
   try {
     const accommodation = new Accommodation(req.body);
     const savedAccommodation = await accommodation.save();
@@ -11,7 +11,7 @@ exports.createAccommodation = async (req, res) => {
 };
 
 // Get all Accommodations
-exports.getAllAccommodations = async (req, res) => {
+const getAllAccommodations = async (req, res) => {
   try {
     const accommodations = await Accommodation.find();
     res.json(accommodations);
@@ -21,7 +21,7 @@ exports.getAllAccommodations = async (req, res) => {
 };
 
 // Get Accommodation by ID
-exports.getAccommodationById = async (req, res) => {
+const getAccommodationById = async (req, res) => {
   try {
     const accommodation = await Accommodation.findById(req.params.id);
     if (!accommodation) {
@@ -34,7 +34,7 @@ exports.getAccommodationById = async (req, res) => {
 };
 
 // Update Accommodation
-exports.updateAccommodation = async (req, res) => {
+const updateAccommodation = async (req, res) => {
   try {
     const updatedAccommodation = await Accommodation.findByIdAndUpdate(
       req.params.id,
@@ -51,7 +51,7 @@ exports.updateAccommodation = async (req, res) => {
 };
 
 // Delete Accommodation
-exports.deleteAccommodation = async (req, res) => {
+ const  deleteAccommodation = async (req, res) => {
   try {
     const deletedAccommodation = await Accommodation.findByIdAndDelete(req.params.id);
     if (!deletedAccommodation) {
@@ -62,3 +62,12 @@ exports.deleteAccommodation = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+module.exports = {
+  createAccommodation,
+  getAllAccommodations,
+  getAccommodationById,
+  updateAccommodation,
+  deleteAccommodation
+};
+

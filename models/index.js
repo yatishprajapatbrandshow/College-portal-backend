@@ -4,6 +4,7 @@ const Accommodation = require ("./Accommodation.model");
 const Stream = require("./Stream.model");
 const ProgramMapped =require("./ProgramMapped.model");
 const Department = require("./Department.model");
+const Admin = require("./Admin.model")
 
 module.exports = {
   College,
@@ -11,5 +12,6 @@ module.exports = {
   Stream,
   Accommodation,
   ProgramMapped,
-  Department
+  Department,
+  Admin
 }
