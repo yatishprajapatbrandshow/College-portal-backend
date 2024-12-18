@@ -1,4 +1,4 @@
-const ProgramMapped =require('../models/ProgramMapped.model')
+const {ProgramMapped} =require('../models')
 
 const createProgramMapped = async (req, res) => {
   try {

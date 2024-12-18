@@ -1,4 +1,4 @@
-const Accommodation = require('../models/Accommodation.model');
+const {Accommodation} = require('../models');
 
 // Create Accommodation
 const createAccommodation = async (req, res) => {
