@@ -3,7 +3,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { StreamController } = require("../controller/Stream.controller");
+const { StreamController } = require("../controller");
 
 // Route to create a new stream
 router.post("/add-stream", StreamController.createStream);

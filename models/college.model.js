@@ -20,8 +20,7 @@ const collegeSchema = new mongoose.Schema(
     },
     hostel_availability: { type: Boolean, default: false }, // Hostel availability
     scholarship_details: {
-      merit_based: { type: String }, // Merit-based scholarship details
-      need_based: { type: String }, // Need-based scholarship details
+      type : Number,
     },
     phone: { type: String }, // Contact phone number
     email: { type: String }, // Contact email
