@@ -1,6 +1,6 @@
 // controllers/StreamController.js
 
-const { Stream } = require('../models/Stream.model'); 
+const Stream = require('../models/Stream.model'); 
 
 // Create a new Stream
 const createStream = async (req, res) => {

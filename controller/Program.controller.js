@@ -1,4 +1,4 @@
-const { Program } = require("../models");
+const Program = require("../models/Program.model");
 
 const createProgram = async (req, res) => {
   try {
@@ -16,7 +16,7 @@ const createProgram = async (req, res) => {
     // Check for duplicate name in the database
     const existingProgram = await Program.findOne({
       name,
-      short_name:shortName,
+      short_name: shortName,
       description,
       status: true,
       deleteflag: false,
