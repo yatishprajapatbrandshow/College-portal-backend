@@ -1,4 +1,4 @@
-const {Department} = require("../models");
+const { Department } = require("../models");
 
 // Create a new Department
 const createDepartment = async (req, res) => {
@@ -37,10 +37,26 @@ const createDepartment = async (req, res) => {
   }
 };
 
-// Get all departments
+// Get all departments with optional search functionality
 const getAllDepartments = async (req, res) => {
   try {
-    const departments = await Department.find({ deleteflag: false });
+    const { search = "" } = req.query;  // Capture search query parameter
+
+    // Initialize the filter to check for non-deleted departments
+    const filter = { deleteflag: false };
+
+    // If a search term is provided, dynamically search across multiple fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
+      filter.$or = [
+        { name: { $regex: searchRegex } },
+        { short_name: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } },
+      ];
+    }
+
+    // Fetch departments based on the search filter
+    const departments = await Department.find(filter);
 
     res.status(200).json({
       status: true,
@@ -95,6 +111,7 @@ const updateDepartment = async (req, res) => {
         message: "Department not found.",
       });
     }
+
     // Update department fields
     department.name = name || department.name;
     department.short_name = short_name || department.short_name;

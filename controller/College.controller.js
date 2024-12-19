@@ -114,6 +114,49 @@ const createCollege = async (req, res) => {
   }
 };
 
+// Get All Colleges with Search (No Sorting or Pagination)
+const getAllColleges = async (req, res) => {
+  try {
+    const { search = "" } = req.query;  // Capture the search query parameter
+
+    const filter = {};  // Default filter to fetch all records
+
+    // If a search term is provided, dynamically search across multiple fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
+      filter.$or = [
+        { name: { $regex: searchRegex } },
+        { city: { $regex: searchRegex } },
+        { state: { $regex: searchRegex } },
+        { phone: { $regex: searchRegex } },
+        { email: { $regex: searchRegex } },
+        { affiliated_university: { $regex: searchRegex } },
+        { ranking: { $regex: searchRegex } },
+        { accreditation: { $regex: searchRegex } },
+        { scholarship_details: { $regex: searchRegex } },
+        { website_url: { $regex: searchRegex } }
+      ];
+    }
+
+    // Fetch colleges based on the search filter or all colleges if no search term is provided
+    const colleges = await College.find(filter);
+
+    // Return the result
+    return res.status(200).json({
+      status: true,
+      message: "Colleges retrieved successfully.",
+      data: colleges,
+    });
+  } catch (error) {
+    console.error("Error fetching colleges:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Failed to retrieve colleges.",
+      data: false,
+    });
+  }
+};
+
 // Update College
 const updateCollege = async (req, res) => {
   try {
@@ -297,48 +340,6 @@ const getCollegeById = async (req, res) => {
     return res.status(500).json({
       status: false,
       message: "Internal server error.",
-      data: false,
-    });
-  }
-};
-
-// Get All Colleges with Search (No Sorting or Pagination)
-const getAllColleges = async (req, res) => {
-  try {
-    const { search = "" } = req.query; // Search query parameter
-
-    const filter = {};
-
-    // If a search term is provided, dynamically search all fields
-    if (search) {
-      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
-      filter.$or = [
-        { name: { $regex: searchRegex } },
-        { city: { $regex: searchRegex } },
-        { state: { $regex: searchRegex } },
-        { phone: { $regex: searchRegex } },
-        { email: { $regex: searchRegex } },
-        { affiliated_university: { $regex: searchRegex } },
-        { ranking: { $regex: searchRegex } },
-        { accreditation: { $regex: searchRegex } },
-        { scholarship_details: { $regex: searchRegex } },
-        { website_url: { $regex: searchRegex } },
-      ];
-    }
-
-    // Fetch colleges based on the search filter
-    const colleges = await College.find(filter);
-
-    return res.status(200).json({
-      status: true,
-      message: "Colleges retrieved successfully.",
-      data: colleges,
-    });
-  } catch (error) {
-    console.error("Error fetching colleges:", error);
-    return res.status(500).json({
-      status: false,
-      message: "Failed to retrieve colleges.",
       data: false,
     });
   }

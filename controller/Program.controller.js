@@ -1,4 +1,4 @@
-const {Program} = require("../models");
+const { Program } = require("../models");
 
 const createProgram = async (req, res) => {
   try {
@@ -181,43 +181,33 @@ const getProgramById = async (req, res) => {
   }
 };
 
+// Get all programs with search functionality
 const getAllPrograms = async (req, res) => {
   try {
-    const {
-      page = 1,
-      limit = 10,
-      sortBy = "createdAt",
-      order = "desc",
-      name,
-    } = req.query;
+    const { search } = req.query;
 
     // Build filter object
     const filter = {};
     filter.status = true;
     filter.deleteflag = false;
-    if (name) filter.name = { $regex: name, $options: "i" };
 
-    const sortOrder = order === "asc" ? 1 : -1;
+    // If a search term is provided, apply search across all relevant fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
+      filter.$or = [
+        { name: { $regex: searchRegex } },
+        { short_name: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } },
+      ];
+    }
 
-    // Fetch programs with pagination and sorting
-    const programs = await Program.find(filter)
-      .sort({ [sortBy]: sortOrder })
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit));
-
-    const total = await Program.countDocuments(filter);
+    // Fetch programs based on the search filter
+    const programs = await Program.find(filter);
 
     return res.status(200).json({
       status: true,
       message: "Programs retrieved successfully.",
-      data: {
-        programs,
-        pagination: {
-          totalRecords: total,
-          currentPage: parseInt(page),
-          totalPages: Math.ceil(total / limit),
-        },
-      },
+      data: programs,
     });
   } catch (error) {
     console.error("Error fetching programs:", error);

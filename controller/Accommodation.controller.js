@@ -1,4 +1,5 @@
-const Accommodation= require('../models'); 
+const Accommodation = require('../models'); 
+
 // Create a new Accommodation
 const createAccommodation = async (req, res) => {
   try {
@@ -10,11 +11,37 @@ const createAccommodation = async (req, res) => {
   }
 };
 
-// Get all Accommodations
+// Get all Accommodations with Search functionality
 const getAllAccommodations = async (req, res) => {
   try {
-    const accommodations = await Accommodation.find();
-    res.json(accommodations);
+    const { search = "" } = req.query;  // Search query parameter
+
+    const filter = {};
+
+    // If a search term is provided, dynamically search all fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i");  // Case-insensitive regex
+      filter.$or = [
+        { name: { $regex: searchRegex } },
+        { city: { $regex: searchRegex } },
+        { state: { $regex: searchRegex } },
+        { type: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } },
+        { price: { $regex: searchRegex } },
+        { amenities: { $regex: searchRegex } },
+        { location: { $regex: searchRegex } },
+      ];
+    }
+
+    // Fetch accommodations based on the search filter
+    const accommodations = await Accommodation.find(filter);
+
+    // Return accommodations as a response
+    res.status(200).json({
+      status: true,
+      message: "Accommodations retrieved successfully.",
+      data: accommodations,
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -51,7 +78,7 @@ const updateAccommodation = async (req, res) => {
 };
 
 // Delete Accommodation
- const  deleteAccommodation = async (req, res) => {
+const deleteAccommodation = async (req, res) => {
   try {
     const deletedAccommodation = await Accommodation.findByIdAndDelete(req.params.id);
     if (!deletedAccommodation) {
@@ -70,4 +97,3 @@ module.exports = {
   updateAccommodation,
   deleteAccommodation
 };
-

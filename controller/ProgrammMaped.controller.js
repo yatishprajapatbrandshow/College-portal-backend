@@ -1,4 +1,4 @@
-const {ProgramMapped} =require('../models')
+const { ProgramMapped } = require('../models');
 
 const createProgramMapped = async (req, res) => {
   try {
@@ -68,6 +68,7 @@ const createProgramMapped = async (req, res) => {
     });
   }
 };
+
 const updateProgramMapped = async (req, res) => {
   try {
     const { id } = req.params;
@@ -122,6 +123,7 @@ const updateProgramMapped = async (req, res) => {
     });
   }
 };
+
 const deleteProgramMapped = async (req, res) => {
   try {
     const { id } = req.params;
@@ -163,6 +165,7 @@ const deleteProgramMapped = async (req, res) => {
     });
   }
 };
+
 const getProgramMappedById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -205,13 +208,36 @@ const getProgramMappedById = async (req, res) => {
     });
   }
 };
+
+// Adding Search functionality to the 'getAllProgramMapped' method
 const getAllProgramMapped = async (req, res) => {
   try {
-    const { page = 1, limit = 10, tag } = req.query;
+    const { page = 1, limit = 10, tag, search } = req.query;
 
+    // Create a filter object for query
     const filter = { deleteflag: false };
-    if (tag) filter.tag = { $regex: tag, $options: "i" };
 
+    // If a 'tag' is provided, apply it to the filter
+    if (tag) {
+      filter.tag = { $regex: tag, $options: "i" }; // Case-insensitive search for tag
+    }
+
+    // If a 'search' term is provided, we will search on multiple fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex for search term
+
+      filter.$or = [
+        { tag: { $regex: searchRegex } },  // Search by tag
+        { fees: { $regex: searchRegex } }, // Search by fees (as string)
+        { "college_id.name": { $regex: searchRegex } },    // Assuming `name` is a field in College model
+        { "accommodation_id.name": { $regex: searchRegex } }, // Assuming `name` is a field in Accommodation model
+        { "program_id.name": { $regex: searchRegex } },    // Assuming `name` is a field in Program model
+        { "department_id.name": { $regex: searchRegex } }, // Assuming `name` is a field in Department model
+        { "stream_id.name": { $regex: searchRegex } }      // Assuming `name` is a field in Stream model
+      ];
+    }
+
+    // Fetch the filtered records
     const programsMapped = await ProgramMapped.find(filter)
       .populate([
         "college_id",
@@ -223,6 +249,7 @@ const getAllProgramMapped = async (req, res) => {
       .skip((page - 1) * limit)
       .limit(parseInt(limit));
 
+    // Get the total number of records matching the filter
     const totalRecords = await ProgramMapped.countDocuments(filter);
 
     return res.status(200).json({
@@ -246,6 +273,7 @@ const getAllProgramMapped = async (req, res) => {
     });
   }
 };
+
 module.exports = {
   createProgramMapped,
   updateProgramMapped,

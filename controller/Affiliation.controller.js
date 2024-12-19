@@ -1,4 +1,4 @@
-const{ Affiliation} = require('../models');
+const { Affiliation } = require('../models');
 
 // Create a new Affiliation
 const createAffiliation = async (req, res) => {
@@ -29,10 +29,26 @@ const createAffiliation = async (req, res) => {
   }
 };
 
-// Get all Affiliations
+// Get all Affiliations with Search functionality
 const getAllAffiliations = async (req, res) => {
   try {
-    const affiliations = await Affiliation.find({ deleteflag: false });
+    const { search = "" } = req.query; // Search query parameter
+
+    const filter = { deleteflag: false }; // Only fetch active affiliations
+
+    // If a search term is provided, dynamically search all fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
+      filter.$or = [
+        { name: { $regex: searchRegex } },
+        { short_name: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } },
+        { status: { $regex: searchRegex } },
+      ];
+    }
+
+    // Fetch affiliations based on the filter (search term, deleteflag: false)
+    const affiliations = await Affiliation.find(filter);
 
     if (affiliations.length === 0) {
       return res.status(404).json({
