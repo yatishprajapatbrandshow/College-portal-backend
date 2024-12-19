@@ -5,6 +5,7 @@ const StreamController = require("./Stream.controller");
 const AdminController = require("./Admin.controller");
 const  UserController = require("./User.controller");
 const AffiliationController = require("./Affiliation.controller");
+const DepartmentController = require("./Department.controller");
 module.exports = {
   CollegeController,
   ProgramController,
@@ -12,5 +13,6 @@ module.exports = {
   StreamController,
   AdminController,
   UserController,
-  AffiliationController
+  AffiliationController,
+  DepartmentController
 };

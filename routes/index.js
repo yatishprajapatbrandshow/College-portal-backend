@@ -5,6 +5,7 @@ const StreamRouter = require("./Stream.router");
 const AdminRouter = require("./Admin.router");
 const UserRouter = require("./User.router");
 const AffiliationRouter = require("./Affiliation.router");
+const DepartmentsRouter = require("./Department.router");
 
 module.exports = {
   CollegeRouter,
@@ -13,5 +14,6 @@ module.exports = {
   StreamRouter,
   AdminRouter,
   UserRouter,
-  AffiliationRouter 
+  AffiliationRouter ,
+  DepartmentsRouter
 };
