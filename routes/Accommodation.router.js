@@ -1,15 +1,12 @@
-// routes/AccommodationRoutes.js
-
 const express = require('express');
 const router = express.Router();
-
-const AccommodationController = require('../controller/Accomodation.controller');
+const{ AccommodationController }= require('../controller'); 
 
 // Routes
-router.post('/add-accommodation', AccommodationController.createAccommodation); // Create
-router.get('/all-accommodations', AccommodationController.getAllAccommodations); // Read all
-router.get('/:id', AccommodationController.getAccommodationById); // Read by ID
-router.put('/:id', AccommodationController.updateAccommodation); // Update
-router.delete('/:id', AccommodationController.deleteAccommodation); // Delete
+router.post('/', AccommodationController.createAccommodation); // Ensure this method exists in the controller
+router.get('/', AccommodationController.getAllAccommodations); // Ensure this method exists
+router.get('/:id',AccommodationController.getAccommodationById); // Ensure this method exists
+router.put('/:id', AccommodationController.updateAccommodation); // Ensure this method exists
+router.delete('/:id',AccommodationController.deleteAccommodation); // Ensure this method exists
 
 module.exports = router;
