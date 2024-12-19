@@ -1,47 +1,63 @@
 const bcrypt = require("bcryptjs");
-// const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken"); 
 const { Admin } = require("../models");
 
+const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'Brandshow@123'; 
+
+// Admin login and token generation
 const auth = async (req, res) => {
   const { email, password } = req.body;
   try {
     // Check if the user exists
     const user = await Admin.findOne({ email, status: true });
-   
+
     if (!user) {
-      return res
-        .status(400)
-        .json({ status: false, message: "Admin Not Found!", data: false });
+      return res.status(400).json({
+        status: false,
+        message: "Admin Not Found!",
+        data: false,
+      });
     }
 
     // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ status: false, message: "Password Not Match!", data: false });
+      return res.status(400).json({
+        status: false,
+        message: "Password Not Match!",
+        data: false,
+      });
     }
 
+    // Create JWT token
+    const token = jwt.sign(
+      { id: user._id, username: user.username, role: user.role },
+      JWT_SECRET_KEY,
+      { expiresIn: '1h' } 
+    );
+
     // Remove the password field before sending the response
-    const userWithoutPassword = { ...user._doc }; // Clone the user object
+    const userWithoutPassword = { ...user._doc };
     delete userWithoutPassword.password;
 
     return res.status(200).json({
       status: true,
       message: "Admin Logged In Successfully",
-      data: userWithoutPassword,
+      data: { user: userWithoutPassword, token }, 
     });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ status: false, message: "Server error", data: false });
+    return res.status(500).json({
+      status: false,
+      message: "Server error",
+      data: false,
+    });
   }
 };
 
+// Admin registration
 const register = async (req, res) => {
-  const { username, password, type, email, mobile, pincode, lastLogin, role } =
-    req.body;
+  const { username, password, type, email, mobile, pincode, lastLogin, role } = req.body;
 
   try {
     const existingUser = await Admin.findOne({ username });
@@ -65,7 +81,7 @@ const register = async (req, res) => {
       mobile,
       pincode,
       lastLogin,
-      role, // Role must be one of the five roles
+      role, 
     });
 
     await newAdmin.save();
