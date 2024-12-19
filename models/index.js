@@ -6,6 +6,7 @@ const ProgramMapped = require("./ProgramMapped.model");
 const Department = require("./Department.model");
 const Admin = require("./Admin.model");
 const User = require("./User.model");
+const Affiliation = require("./Affiliation.model");
 
 module.exports = {
   Program,
@@ -14,5 +15,6 @@ module.exports = {
   ProgramMapped,
   Department,
   Admin,
-  User
+  User,
+  Affiliation
 }

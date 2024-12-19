@@ -13,7 +13,7 @@ app.use(cors()); // To parse JSON request bodies
 app.use(express.json()); // To parse JSON request bodies
 
 // Import Routers
-const { CollegeRouter, ProgramRouter, AccommodationRouter, StreamRouter, AdminRouter, UserRouter } = require("./routes"); 
+const { CollegeRouter, ProgramRouter, AccommodationRouter, StreamRouter, AdminRouter, UserRouter, AffiliationRouter } = require("./routes"); 
 
 // Routes Started
 app.use("/api/college", CollegeRouter);
@@ -22,6 +22,7 @@ app.use("/api/accommodation", AccommodationRouter);
 app.use("/api/stream", StreamRouter); 
 app.use("/api/admin", AdminRouter);
 app.use("./api/user" , UserRouter);
+app.use("./api/affiliation" , AffiliationRouter);
 
 // Routes Ended
 

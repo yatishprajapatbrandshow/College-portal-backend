@@ -4,11 +4,13 @@ const AccommodationController = require("./Accommodation.controller");
 const StreamController = require("./Stream.controller");
 const AdminController = require("./Admin.controller");
 const  UserController = require("./User.controller");
+const AffiliationController = require("./Affiliation.controller");
 module.exports = {
   CollegeController,
   ProgramController,
   AccommodationController,
   StreamController,
   AdminController,
-  UserController
+  UserController,
+  AffiliationController
 };
