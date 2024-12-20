@@ -1,5 +1,6 @@
-const {College}  = require("../models");
+const { College } = require("../models");
 
+// Create College
 const createCollege = async (req, res) => {
   try {
     const {
@@ -48,25 +49,7 @@ const createCollege = async (req, res) => {
       });
     }
 
-    if (location) {
-      const { latitude, longitude } = location;
-      if (latitude && typeof latitude !== "number") {
-        return res.status(400).json({
-          status: false,
-          message: "Latitude must be a number.",
-          data: false,
-        });
-      }
-      if (longitude && typeof longitude !== "number") {
-        return res.status(400).json({
-          status: false,
-          message: "Longitude must be a number.",
-          data: false,
-        });
-      }
-    }
-
-    // Avoid duplicate email or phone (if required)
+    // Avoid duplicate email or phone
     const existingCollege = await College.findOne({
       $or: [{ email }, { phone }],
     });
@@ -109,8 +92,6 @@ const createCollege = async (req, res) => {
     });
   } catch (error) {
     console.error("Error creating college:", error);
-
-    // Handle validation errors
     if (error.name === "ValidationError") {
       return res.status(400).json({
         status: false,
@@ -118,8 +99,6 @@ const createCollege = async (req, res) => {
         data: error.message,
       });
     }
-
-    // Handle duplicate key error
     if (error.code === 11000) {
       return res.status(409).json({
         status: false,
@@ -127,8 +106,6 @@ const createCollege = async (req, res) => {
         data: error.keyValue,
       });
     }
-
-    // General server error
     return res.status(500).json({
       status: false,
       message: "Internal server error.",
@@ -136,12 +113,56 @@ const createCollege = async (req, res) => {
     });
   }
 };
+
+// Get All Colleges with Search (No Sorting or Pagination)
+const getAllColleges = async (req, res) => {
+  try {
+    const { search = "" } = req.query;  // Capture the search query parameter
+
+    const filter = {};  // Default filter to fetch all records
+
+    // If a search term is provided, dynamically search across multiple fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
+      filter.$or = [
+        { name: { $regex: searchRegex } },
+        { city: { $regex: searchRegex } },
+        { state: { $regex: searchRegex } },
+        { phone: { $regex: searchRegex } },
+        { email: { $regex: searchRegex } },
+        { affiliated_university: { $regex: searchRegex } },
+        { ranking: { $regex: searchRegex } },
+        { accreditation: { $regex: searchRegex } },
+        { scholarship_details: { $regex: searchRegex } },
+        { website_url: { $regex: searchRegex } }
+      ];
+    }
+
+    // Fetch colleges based on the search filter or all colleges if no search term is provided
+    const colleges = await College.find(filter);
+
+    // Return the result
+    return res.status(200).json({
+      status: true,
+      message: "Colleges retrieved successfully.",
+      data: colleges,
+    });
+  } catch (error) {
+    console.error("Error fetching colleges:", error);
+    return res.status(500).json({
+      status: false,
+      message: "Failed to retrieve colleges.",
+      data: false,
+    });
+  }
+};
+
+// Update College
 const updateCollege = async (req, res) => {
   try {
     const { id } = req.params; // College ID to update
     const updates = req.body;
 
-    // Check if college ID is provided
     if (!id) {
       return res.status(400).json({
         status: false,
@@ -208,8 +229,6 @@ const updateCollege = async (req, res) => {
     });
   } catch (error) {
     console.error("Error updating college:", error);
-
-    // Handle validation errors
     if (error.name === "ValidationError") {
       return res.status(400).json({
         status: false,
@@ -217,8 +236,6 @@ const updateCollege = async (req, res) => {
         data: error.message,
       });
     }
-
-    // Handle invalid ID format
     if (error.name === "CastError") {
       return res.status(400).json({
         status: false,
@@ -226,8 +243,6 @@ const updateCollege = async (req, res) => {
         data: false,
       });
     }
-
-    // General server error
     return res.status(500).json({
       status: false,
       message: "Internal server error.",
@@ -235,11 +250,12 @@ const updateCollege = async (req, res) => {
     });
   }
 };
+
+// Delete College (soft delete)
 const deleteCollege = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validate the ID
     if (!id) {
       return res.status(400).json({
         status: false,
@@ -248,9 +264,7 @@ const deleteCollege = async (req, res) => {
       });
     }
 
-    // Find the college by ID
     const college = await College.findById(id);
-
     if (!college) {
       return res.status(404).json({
         status: false,
@@ -271,8 +285,6 @@ const deleteCollege = async (req, res) => {
     });
   } catch (error) {
     console.error("Error deleting college:", error);
-
-    // Handle invalid ID format
     if (error.name === "CastError") {
       return res.status(400).json({
         status: false,
@@ -280,8 +292,6 @@ const deleteCollege = async (req, res) => {
         data: false,
       });
     }
-
-    // General server error
     return res.status(500).json({
       status: false,
       message: "Internal server error.",
@@ -289,11 +299,12 @@ const deleteCollege = async (req, res) => {
     });
   }
 };
+
+// Get College by ID
 const getCollegeById = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validate the ID
     if (!id) {
       return res.status(400).json({
         status: false,
@@ -302,10 +313,8 @@ const getCollegeById = async (req, res) => {
       });
     }
 
-    // Find the college by ID
     const college = await College.findById(id);
 
-    // Check if the college exists
     if (!college) {
       return res.status(404).json({
         status: false,
@@ -321,8 +330,6 @@ const getCollegeById = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching college by ID:", error);
-
-    // Handle invalid ID format
     if (error.name === "CastError") {
       return res.status(400).json({
         status: false,
@@ -330,8 +337,6 @@ const getCollegeById = async (req, res) => {
         data: false,
       });
     }
-
-    // General server error
     return res.status(500).json({
       status: false,
       message: "Internal server error.",
@@ -339,58 +344,7 @@ const getCollegeById = async (req, res) => {
     });
   }
 };
-const getAllColleges = async (req, res) => {
-  try {
-    // Destructure query parameters for filtering, pagination, and sorting
-    const {
-      page = 1,
-      limit = 10,
-      sortBy = "createdAt",
-      order = "desc",
-      city,
-      state,
-      name,
-    } = req.query;
 
-    // Build a dynamic filter object
-    const filter = {};
-    if (city) filter.city = { $regex: city, $options: "i" }; // Case-insensitive city filter
-    if (state) filter.state = { $regex: state, $options: "i" }; // Case-insensitive state filter
-    if (name) filter.name = { $regex: name, $options: "i" }; // Case-insensitive name filter
-
-    // Parse sorting order
-    const sortOrder = order === "asc" ? 1 : -1;
-
-    // Fetch records with filtering, pagination, and sorting
-    const colleges = await College.find(filter)
-      .sort({ [sortBy]: sortOrder }) // Dynamic sorting
-      .skip((page - 1) * limit) // Pagination: skip records
-      .limit(parseInt(limit)); // Pagination: limit records
-
-    // Total count of matching records
-    const total = await College.countDocuments(filter);
-
-    return res.status(200).json({
-      status: true,
-      message: "Colleges retrieved successfully.",
-      data: {
-        colleges,
-        pagination: {
-          totalRecords: total,
-          currentPage: parseInt(page),
-          totalPages: Math.ceil(total / limit),
-        },
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching colleges:", error);
-    return res.status(500).json({
-      status: false,
-      message: "Failed to retrieve colleges.",
-      data: false,
-    });
-  }
-};
 module.exports = {
   createCollege,
   updateCollege,

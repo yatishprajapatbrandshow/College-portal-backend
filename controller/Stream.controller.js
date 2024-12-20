@@ -1,17 +1,9 @@
-// controllers/StreamController.js
-
-const {Stream} = require('../models'); 
+const { Stream } = require('../models');
 
 // Create a new Stream
 const createStream = async (req, res) => {
   try {
-    const {
-      name,
-      short_name,
-      description,
-      status,
-      deleteflag,
-    } = req.body;
+    const { name, short_name, description, status, deleteflag } = req.body;
 
     // Validate required fields
     if (!name || !short_name) {
@@ -79,11 +71,35 @@ const createStream = async (req, res) => {
   }
 };
 
-// Get all Streams
+// Get all Streams with Search functionality
 const getAllStreams = async (req, res) => {
   try {
-    const streams = await Stream.find({ deleteflag: false }); // Fetch only streams that are not marked as deleted
-    return res.status(200).json({
+    const { search = "" } = req.query; // Search query parameter
+
+    const filter = { deleteflag: false }; // Only fetch active streams
+
+    // If a search term is provided, dynamically search all fields
+    if (search) {
+      const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
+      filter.$or = [
+        { name: { $regex: searchRegex } },
+        { short_name: { $regex: searchRegex } },
+        { description: { $regex: searchRegex } },
+        { status: { $regex: searchRegex } },
+      ];
+    }
+
+    // Fetch streams based on the filter (search term, deleteflag: false)
+    const streams = await Stream.find(filter);
+
+    if (streams.length === 0) {
+      return res.status(404).json({
+        status: false,
+        message: "No streams found.",
+      });
+    }
+
+    res.status(200).json({
       status: true,
       message: "Streams retrieved successfully.",
       data: streams,
