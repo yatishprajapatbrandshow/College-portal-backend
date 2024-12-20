@@ -9,6 +9,7 @@ const User = require("./User.model");
 const Affiliation = require("./Affiliation.model");
 
 module.exports = {
+  College,
   Program,
   Stream,
   Accommodation,

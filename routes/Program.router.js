@@ -8,6 +8,6 @@ router.post("/add", ProgramController.createProgram);
 router.put("/update/:id", ProgramController.updateProgram);
 router.delete("/delete/:id", ProgramController.deleteProgram);
 router.get("/get-by-id", ProgramController.getProgramById);
-router.get("/", ProgramController.getAllPrograms);
+router.get("/get/all-programs", ProgramController.getAllPrograms);
 
 module.exports = router;
