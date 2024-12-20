@@ -1,13 +1,14 @@
-// routes/User.router.js
-const express = require('express');
+const express = require("express");
+
 const router = express.Router();
 
-// Import the middleware
-const { verifyToken, authenticate } = require('../middlewares/authMiddleware');
+const { UserController } = require("../controller");
+const { verifyToken } = require("../middlewares/authMiddleware");
 
-// Define your routes here, using the middleware
-router.get('/some-protected-route', authenticate, (req, res) => {
-  res.send('This is a protected route');
-});
+// User routes
+router.post("/register", UserController.register);        // Route for user registration
+router.post("/login", UserController.login);              // Route for user login
+router.put("/update/:id", verifyToken, UserController.updateUser);   // Protected route
+router.delete("/delete/:id", verifyToken, UserController.deleteUser); // Protected route
 
 module.exports = router;
