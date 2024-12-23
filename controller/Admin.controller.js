@@ -59,6 +59,16 @@ const auth = async (req, res) => {
 const register = async (req, res) => {
   const { username, password, type, email, mobile, pincode, lastLogin, role } = req.body;
 
+  console.log("Request body:", req.body);  // Log request body to check if password is being passed
+
+  if (!password) {
+    return res.status(400).json({
+      status: false,
+      message: "Password is required",
+      data: false,
+    });
+  }
+
   try {
     const existingUser = await Admin.findOne({ username });
     if (existingUser) {
@@ -100,6 +110,7 @@ const register = async (req, res) => {
     });
   }
 };
+
 
 // Update admin details
 const updateAdmin = async (req, res) => {
