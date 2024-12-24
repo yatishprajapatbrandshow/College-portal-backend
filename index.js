@@ -30,8 +30,8 @@ app.use("/api/program", ProgramRouter);
 app.use("/api/accommodation", AccommodationRouter);
 app.use("/api/stream", StreamRouter);
 app.use("/api/admin", AdminRouter);
-app.use("/api/user", UserRouter);
-app.use("/api/affiliation", AffiliationRouter);
+app.use("/api/user" , UserRouter);
+app.use("/api/affiliation" , AffiliationRouter);
 app.use("/api/departments", DepartmentsRouter);
 
 // Routes Ended
