@@ -16,15 +16,18 @@ const createAffiliation = async (req, res) => {
     // Save the affiliation to the database
     await affiliation.save();
 
+    // Send response with status, message, and data
     res.status(201).json({
       status: true,
       message: "Affiliation created successfully",
       data: affiliation,
     });
   } catch (error) {
+    // Handle errors with consistent response format
     res.status(500).json({
       status: false,
       message: error.message,
+      data: null,
     });
   }
 };
@@ -54,17 +57,22 @@ const getAllAffiliations = async (req, res) => {
       return res.status(404).json({
         status: false,
         message: "No affiliations found.",
+        data: null,
       });
     }
 
+    // Send response with status, message, and data
     res.status(200).json({
       status: true,
+      message: "Affiliations fetched successfully",
       data: affiliations,
     });
   } catch (error) {
+    // Handle errors with consistent response format
     res.status(500).json({
       status: false,
       message: error.message,
+      data: null,
     });
   }
 };
@@ -78,17 +86,22 @@ const getAffiliationById = async (req, res) => {
       return res.status(404).json({
         status: false,
         message: "Affiliation not found.",
+        data: null,
       });
     }
 
+    // Send response with status, message, and data
     res.status(200).json({
       status: true,
+      message: "Affiliation fetched successfully",
       data: affiliation,
     });
   } catch (error) {
+    // Handle errors with consistent response format
     res.status(500).json({
       status: false,
       message: error.message,
+      data: null,
     });
   }
 };
@@ -106,18 +119,22 @@ const updateAffiliation = async (req, res) => {
       return res.status(404).json({
         status: false,
         message: "Affiliation not found.",
+        data: null,
       });
     }
 
+    // Send response with status, message, and data
     res.status(200).json({
       status: true,
       message: "Affiliation updated successfully",
       data: affiliation,
     });
   } catch (error) {
+    // Handle errors with consistent response format
     res.status(500).json({
       status: false,
       message: error.message,
+      data: null,
     });
   }
 };
@@ -135,17 +152,22 @@ const deleteAffiliation = async (req, res) => {
       return res.status(404).json({
         status: false,
         message: "Affiliation not found.",
+        data: null,
       });
     }
 
+    // Send response with status, message, and data
     res.status(200).json({
       status: true,
       message: "Affiliation deleted successfully",
+      data: null,
     });
   } catch (error) {
+    // Handle errors with consistent response format
     res.status(500).json({
       status: false,
       message: error.message,
+      data: null,
     });
   }
 };

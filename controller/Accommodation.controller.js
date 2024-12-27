@@ -1,13 +1,21 @@
-const {Accommodation} = require('../models'); 
+const { Accommodation } = require('../models'); 
 
 // Create a new Accommodation
 const createAccommodation = async (req, res) => {
   try {
     const accommodation = new Accommodation(req.body);
     const savedAccommodation = await accommodation.save();
-    res.status(201).json(savedAccommodation);
+    res.status(201).json({
+      status: true,
+      data: savedAccommodation,
+      message: "Accommodation created successfully."
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({
+      status: false,
+      data: null,
+      message: error.message
+    });
   }
 };
 
@@ -15,7 +23,6 @@ const createAccommodation = async (req, res) => {
 const getAllAccommodations = async (req, res) => {
   try {
     const { search = "" } = req.query;  // Search query parameter
-
     const filter = {};
 
     // If a search term is provided, dynamically search all fields
@@ -39,11 +46,15 @@ const getAllAccommodations = async (req, res) => {
     // Return accommodations as a response
     res.status(200).json({
       status: true,
-      message: "Accommodations retrieved successfully.",
       data: accommodations,
+      message: "Accommodations retrieved successfully."
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      status: false,
+      data: null,
+      message: error.message
+    });
   }
 };
 
@@ -52,11 +63,23 @@ const getAccommodationById = async (req, res) => {
   try {
     const accommodation = await Accommodation.findById(req.params.id);
     if (!accommodation) {
-      return res.status(404).json({ message: 'Accommodation not found' });
+      return res.status(404).json({
+        status: false,
+        data: null,
+        message: 'Accommodation not found'
+      });
     }
-    res.json(accommodation);
+    res.json({
+      status: true,
+      data: accommodation,
+      message: "Accommodation retrieved successfully."
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      status: false,
+      data: null,
+      message: error.message
+    });
   }
 };
 
@@ -69,11 +92,23 @@ const updateAccommodation = async (req, res) => {
       { new: true, runValidators: true }
     );
     if (!updatedAccommodation) {
-      return res.status(404).json({ message: 'Accommodation not found' });
+      return res.status(404).json({
+        status: false,
+        data: null,
+        message: 'Accommodation not found'
+      });
     }
-    res.json(updatedAccommodation);
+    res.json({
+      status: true,
+      data: updatedAccommodation,
+      message: "Accommodation updated successfully."
+    });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({
+      status: false,
+      data: null,
+      message: error.message
+    });
   }
 };
 
@@ -82,11 +117,23 @@ const deleteAccommodation = async (req, res) => {
   try {
     const deletedAccommodation = await Accommodation.findByIdAndDelete(req.params.id);
     if (!deletedAccommodation) {
-      return res.status(404).json({ message: 'Accommodation not found' });
+      return res.status(404).json({
+        status: false,
+        data: null,
+        message: 'Accommodation not found'
+      });
     }
-    res.json({ message: 'Accommodation deleted successfully' });
+    res.json({
+      status: true,
+      data: null,
+      message: 'Accommodation deleted successfully'
+    });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      status: false,
+      data: null,
+      message: error.message
+    });
   }
 };
 
