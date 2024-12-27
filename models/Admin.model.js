@@ -40,7 +40,7 @@ const adminSchema = new mongoose.Schema({
             'portalDataEntry', 
             'collegeSuperAdmin', 
             'collegeLeadManagement'
-        ] // Restricts the role field to these 5 roles only
+        ] 
     },
     deleteflag: { 
         type: Boolean, default: false 

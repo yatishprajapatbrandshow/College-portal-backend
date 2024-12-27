@@ -10,7 +10,8 @@ const accommodationSchema = new mongoose.Schema(
       type: String, 
       enum: ['Hostel', 'PG', 'Apartment'], 
       required: true 
-    },        // Type of accommodation
+    },      
+      // Type of accommodation
     address: { type: String, required: true },       // Full address
     city: { type: String, required: true },          // City
     state: { type: String, required: true },         // State
