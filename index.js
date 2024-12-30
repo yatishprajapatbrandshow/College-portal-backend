@@ -24,7 +24,7 @@ app.use("/api/admin", AdminRouter);
 app.use("/api/user" , UserRouter);
 app.use("/api/affiliation" , AffiliationRouter);
 app.use("/api/departments", DepartmentsRouter);
-app.use("/api/search" , SearchRouter);
+app.use("/api" , SearchRouter);
 
 // Routes Ended
 
