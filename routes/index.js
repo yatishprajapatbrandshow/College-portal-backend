@@ -6,6 +6,7 @@ const AdminRouter = require("./Admin.router");
 const UserRouter = require("./User.router");
 const AffiliationRouter = require("./Affiliation.router");
 const DepartmentsRouter = require("./Department.router");
+const SearchRouter = require("./Search.router");
 
 module.exports = {
   CollegeRouter,
@@ -15,5 +16,6 @@ module.exports = {
   AdminRouter,
   UserRouter,
   AffiliationRouter ,
-  DepartmentsRouter
+  DepartmentsRouter,
+  SearchRouter
 };
