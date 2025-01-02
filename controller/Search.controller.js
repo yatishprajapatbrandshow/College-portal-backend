@@ -33,9 +33,6 @@ const search = async (req, res) => {
           "scholarship_details", 
           "phone", 
           "email", 
-          "location.latitude", 
-          "location.longitude", 
-          "images", 
           "datasheet_url", 
           "website_url"
         ]

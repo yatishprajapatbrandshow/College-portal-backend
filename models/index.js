@@ -7,6 +7,8 @@ const Department = require("./Department.model");
 const Admin = require("./Admin.model");
 const User = require("./User.model");
 const Affiliation = require("./Affiliation.model");
+const Event = require("./Event.model");
+const Advertisement = require("./Advertisement.model");
 
 module.exports = {
   College,
@@ -17,5 +19,7 @@ module.exports = {
   Department,
   Admin,
   User,
-  Affiliation
+  Affiliation,
+  Event,
+  Advertisement
 }

@@ -7,6 +7,8 @@ const  UserController = require("./User.controller");
 const AffiliationController = require("./Affiliation.controller");
 const DepartmentController = require("./Department.controller");
 const SearchController = require("./Search.controller");
+const EventController = require("./Event.controller");
+const AdvertisementController = require("./Advertisement.controller");
 module.exports = {
   CollegeController,
   ProgramController,
@@ -16,5 +18,7 @@ module.exports = {
   UserController,
   AffiliationController,
   DepartmentController,
-  SearchController
+  SearchController,
+  EventController,
+  AdvertisementController
 };

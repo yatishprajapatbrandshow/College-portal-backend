@@ -18,19 +18,19 @@ const collegeSchema = new mongoose.Schema(
       highest_package: { type: Number }, // Highest package offered
       avg_package: { type: Number }, // Average package offered
     },
-    hostel_availability: { type: Boolean, default: false }, // Hostel availability
+    hostel_availability: { type: Boolean, default: false }, 
     scholarship_details: {
       type : String
     },
-    phone: { type: String }, // Contact phone number
-    email: { type: String }, // Contact email
+    phone: { type: String }, 
+    email: { type: String }, 
     location: {
       latitude: { type: Number },
       longitude: { type: Number },
     },
-    images: [{ type: String }], // Image URLs
-    datasheet_url: { type: String }, // Datasheet link
-    website_url: { type: String }, // Official website URL
+    images: [{ type: String }], 
+    datasheet_url: { type: String }, 
+    website_url: { type: String }, 
     status: { type: Boolean, default: true },
     deleteflag: { type: Boolean, default: false },
   },

@@ -7,6 +7,8 @@ const UserRouter = require("./User.router");
 const AffiliationRouter = require("./Affiliation.router");
 const DepartmentsRouter = require("./Department.router");
 const SearchRouter = require("./Search.router");
+const EventRouter = require("./Event.router");
+const AdvertisementRouter = require("./Advertisement.router");
 
 module.exports = {
   CollegeRouter,
@@ -17,5 +19,7 @@ module.exports = {
   UserRouter,
   AffiliationRouter ,
   DepartmentsRouter,
-  SearchRouter
+  SearchRouter,
+  EventRouter,
+  AdvertisementRouter
 };
