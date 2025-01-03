@@ -1,20 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const {advertisementController} = require('../controller'); // Adjust the path accordingly
+const {AdvertisementController} = require('../controller'); // Adjust the path accordingly
 
 // Route to create an advertisement
-router.post('/add-advertisement', advertisementController.createAdvertisement);
+router.post('/add-advertisement', AdvertisementController.createAdvertisement);
 
 // Route to get all advertisements
-router.get('/all-advertisement', advertisementController.getAllAdvertisements);
+router.get('/all-advertisement', AdvertisementController.getAllAdvertisements);
 
 // Route to get a single advertisement by ID
-router.get('/:id', advertisementController.getAdvertisementById);
+router.get('/:id', AdvertisementController.getAdvertisementById);
 
 // Route to update an advertisement
-router.put('/:id', advertisementController.updateAdvertisement);
+router.put('/:id', AdvertisementController.updateAdvertisement);
 
 // Route to delete an advertisement (soft delete)
-router.delete('/:id', advertisementController.deleteAdvertisement);
+router.delete('/:id', AdvertisementController.deleteAdvertisement);
 
 module.exports = router;
