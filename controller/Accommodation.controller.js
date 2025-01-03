@@ -1,4 +1,4 @@
-const { Accommodation } = require('../models'); 
+const  {Accommodation} = require('../models'); 
 
 // Create a new Accommodation
 const createAccommodation = async (req, res) => {
@@ -8,57 +8,49 @@ const createAccommodation = async (req, res) => {
     res.status(201).json({
       status: true,
       data: savedAccommodation,
-      message: "Accommodation created successfully."
+      message: 'Accommodation created successfully.',
     });
   } catch (error) {
     res.status(400).json({
       status: false,
       data: null,
-      message: error.message
+      message: error.message,
     });
   }
 };
 
-// Get all Accommodations with Search functionality
+// Get all Accommodations with Search Functionality
 const getAllAccommodations = async (req, res) => {
   try {
-    const { search = "" } = req.query;  // Search query parameter
+    const { name, type, city, state, country } = req.query;
+
+    // Build search filter
     const filter = {};
+    if (name) filter.name = { $regex: name, $options: 'i' }; // Case-insensitive search
+    if (type) filter.type = { $regex: type, $options: 'i' };
+    if (city) filter['location.city'] = { $regex: city, $options: 'i' };
+    if (state) filter['location.state'] = { $regex: state, $options: 'i' };
+    if (country) filter['location.country'] = { $regex: country, $options: 'i' };
 
-    // If a search term is provided, dynamically search all fields
-    if (search) {
-      const searchRegex = new RegExp(search, "i");  // Case-insensitive regex
-      filter.$or = [
-        { name: { $regex: searchRegex } },
-        { city: { $regex: searchRegex } },
-        { state: { $regex: searchRegex } },
-        { type: { $regex: searchRegex } },
-        { description: { $regex: searchRegex } },
-        { price: { $regex: searchRegex } },
-        { amenities: { $regex: searchRegex } },
-        { location: { $regex: searchRegex } },
-      ];
-    }
-
-    // Fetch accommodations based on the search filter
     const accommodations = await Accommodation.find(filter);
 
-    // Return accommodations as a response
     res.status(200).json({
       status: true,
       data: accommodations,
-      message: "Accommodations retrieved successfully."
+      message: accommodations.length
+        ? 'Accommodations retrieved successfully.'
+        : 'No accommodations found matching your criteria.',
     });
   } catch (error) {
     res.status(500).json({
       status: false,
       data: null,
-      message: error.message
+      message: error.message,
     });
   }
 };
 
-// Get Accommodation by ID
+// Get a single Accommodation by ID
 const getAccommodationById = async (req, res) => {
   try {
     const accommodation = await Accommodation.findById(req.params.id);
@@ -66,25 +58,25 @@ const getAccommodationById = async (req, res) => {
       return res.status(404).json({
         status: false,
         data: null,
-        message: 'Accommodation not found'
+        message: 'Accommodation not found.',
       });
     }
-    res.json({
+    res.status(200).json({
       status: true,
       data: accommodation,
-      message: "Accommodation retrieved successfully."
+      message: 'Accommodation retrieved successfully.',
     });
   } catch (error) {
     res.status(500).json({
       status: false,
       data: null,
-      message: error.message
+      message: error.message,
     });
   }
 };
 
-// Update Accommodation
-const updateAccommodation = async (req, res) => {
+// Update an Accommodation by ID
+ const updateAccommodation = async (req, res) => {
   try {
     const updatedAccommodation = await Accommodation.findByIdAndUpdate(
       req.params.id,
@@ -95,47 +87,50 @@ const updateAccommodation = async (req, res) => {
       return res.status(404).json({
         status: false,
         data: null,
-        message: 'Accommodation not found'
+        message: 'Accommodation not found.',
       });
     }
-    res.json({
+    res.status(200).json({
       status: true,
       data: updatedAccommodation,
-      message: "Accommodation updated successfully."
+      message: 'Accommodation updated successfully.',
     });
   } catch (error) {
     res.status(400).json({
       status: false,
       data: null,
-      message: error.message
+      message: error.message,
     });
   }
 };
 
-// Delete Accommodation
-const deleteAccommodation = async (req, res) => {
+// Delete an Accommodation by ID
+ const  deleteAccommodation = async (req, res) => {
   try {
-    const deletedAccommodation = await Accommodation.findByIdAndDelete(req.params.id);
+    const deletedAccommodation = await Accommodation.findByIdAndDelete(
+      req.params.id
+    );
     if (!deletedAccommodation) {
       return res.status(404).json({
         status: false,
         data: null,
-        message: 'Accommodation not found'
+        message: 'Accommodation not found.',
       });
     }
-    res.json({
+    res.status(200).json({
       status: true,
-      data: null,
-      message: 'Accommodation deleted successfully'
+      data: deletedAccommodation,
+      message: 'Accommodation deleted successfully.',
     });
   } catch (error) {
     res.status(500).json({
       status: false,
       data: null,
-      message: error.message
+      message: error.message,
     });
   }
 };
+
 
 module.exports = {
   createAccommodation,

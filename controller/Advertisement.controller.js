@@ -1,7 +1,7 @@
-const Advertisement = require('../models/Advertisement'); // Assuming the model is in the 'models/Advertisement.js'
+const  {Advertisement} = require('../models'); 
 
 // Create a new advertisement
-exports.createAdvertisement = async (req, res) => {
+ const createAdvertisement = async (req, res) => {
   try {
     const newAd = new Advertisement(req.body);
     await newAd.save();
@@ -21,7 +21,7 @@ exports.createAdvertisement = async (req, res) => {
 };
 
 // Get all advertisements
-exports.getAllAdvertisements = async (req, res) => {
+const getAllAdvertisements = async (req, res) => {
   try {
     const advertisements = await Advertisement.find({ deleteflag: false }); // Exclude soft deleted ads
     res.status(200).json({
@@ -40,7 +40,7 @@ exports.getAllAdvertisements = async (req, res) => {
 };
 
 // Get a single advertisement by ID
-exports.getAdvertisementById = async (req, res) => {
+const getAdvertisementById = async (req, res) => {
   try {
     const ad = await Advertisement.findById(req.params.id);
     if (!ad) {
@@ -66,7 +66,7 @@ exports.getAdvertisementById = async (req, res) => {
 };
 
 // Update an existing advertisement
-exports.updateAdvertisement = async (req, res) => {
+const updateAdvertisement = async (req, res) => {
   try {
     const ad = await Advertisement.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!ad) {
@@ -92,7 +92,7 @@ exports.updateAdvertisement = async (req, res) => {
 };
 
 // Soft delete an advertisement (set deleteflag to true)
-exports.deleteAdvertisement = async (req, res) => {
+const deleteAdvertisement = async (req, res) => {
   try {
     const ad = await Advertisement.findByIdAndUpdate(req.params.id, { deleteflag: true }, { new: true });
     if (!ad) {
@@ -115,4 +115,12 @@ exports.deleteAdvertisement = async (req, res) => {
       msg: error.message
     });
   }
+};
+
+module.exports = {
+  createAdvertisement ,
+  getAllAdvertisements,
+  getAdvertisementById ,
+  updateAdvertisement,
+  deleteAdvertisement 
 };
