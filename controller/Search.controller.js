@@ -1,152 +1,103 @@
 const mongoose = require("mongoose");
+// Import all models from models/index.js
+const models = require("../models");
 
 const search = async (req, res) => {
   try {
-    const {
-      program,
-      department,
-      stream,
-      tag,
-      location,
-      feeRange,
-      highestPlacement,
-      scholarshipAmount,
-      page = 1,
-      limit = 50,
-    } = req.query;
+    const { search, table, page = 1, limit = 50, sort = "name" } = req.query;
 
-    const pipeline = [];
+    // Check if the search term and table are provided
+    if (!search || !table) {
+      return res.status(400).json({ status: false, message: "Search query and table are required." });
+    }
 
-    // Filtering by program, department, stream, and tag
-    const matchConditions = {
-      ...(program &&
-        mongoose.Types.ObjectId.isValid(program) && {
-          program_id: mongoose.Types.ObjectId(program),
-        }),
-      ...(department &&
-        mongoose.Types.ObjectId.isValid(department) && {
-          department_id: mongoose.Types.ObjectId(department),
-        }),
-      ...(stream &&
-        mongoose.Types.ObjectId.isValid(stream) && {
-          stream_id: mongoose.Types.ObjectId(stream),
-        }),
-      ...(tag && { tag: tag }),
+    // Create a case-insensitive regular expression for the search term
+    const searchRegex = new RegExp(search, "i");
+
+    // Define the available tables and their corresponding models and fields
+    const tableMapping = {
+      college: {
+        model: models.College,
+        fields: [
+          "name", 
+          "city", 
+          "state", 
+          "established_year", 
+          "affiliated_university", 
+          "college_type", 
+          "ranking", 
+          "accreditation", 
+          "placement_details.highest_package", 
+          "placement_details.avg_package", 
+          "hostel_availability", 
+          "scholarship_details", 
+          "phone", 
+          "email", 
+          "datasheet_url", 
+          "website_url"
+        ]
+      },
+      accommodation: {
+        model: models.Accommodation,
+        fields: ["name", "address", "city", "state", "country", "amenities"]
+      },
+      program: {
+        model: models.Program,
+        fields: ["name", "short_name", "description"]
+      },
+      stream: {
+        model: models.Stream,
+        fields: ["name", "short_name", "description"]
+      },
+      department: {
+        model: models.Department,
+        fields: ["name", "short_name", "description"]
+      },
+      affiliation: {
+        model: models.Affiliation,
+        fields: ["name", "short_name", "description"]
+      }
     };
 
-    if (Object.keys(matchConditions).length > 0) {
-      pipeline.push({ $match: matchConditions });
+    // Check if the selected table exists in the mapping
+    const selectedTable = tableMapping[table];
+    if (!selectedTable) {
+      return res.status(400).json({ status: false, message: "Invalid table name provided." });
     }
 
-    // Location filter (city, state)
-    if (location) {
-      const [city, state] = location.split(",").map((part) => part.trim());
-      pipeline.push({
-        $match: {
-          ...(city && { "college.city": city }),
-          ...(state && { "college.state": state }),
-        },
-      });
-    }
+    // Dynamically create the query for the selected table
+    const searchQuery = {
+      $or: selectedTable.fields.map(field => {
+        // Add support for nested fields (e.g., "placement_details.highest_package")
+        return { [field]: searchRegex };
+      })
+    };
 
-    // Fee range filter
-    if (feeRange) {
-      try {
-        const { min, max } = JSON.parse(feeRange);
-        pipeline.push({
-          $match: {
-            fees: {
-              ...(min && { $gte: parseInt(min, 10) }),
-              ...(max && { $lte: parseInt(max, 10) }),
-            },
-          },
-        });
-      } catch (error) {
-        return res
-          .status(400)
-          .json({ status: false, message: "Invalid fee range format" });
-      }
-    }
+    // Query the selected table
+    const queryResults = await selectedTable.model.find(searchQuery)
+      .skip((page - 1) * limit)
+      .limit(Number(limit)) // Ensure that limit is a number
+      .sort({ [sort]: 1 }); // Sort by the given field, default is 'name'
 
-    // Highest placement filter
-    if (highestPlacement) {
-      pipeline.push({
-        $match: {
-          "college.placement_details.highest_package": {
-            $gte: parseInt(highestPlacement, 10),
-          },
-        },
-      });
-    }
-
-    // Scholarship amount filter
-    if (scholarshipAmount) {
-      pipeline.push({
-        $match: {
-          "college.scholarship_details": {
-            $gte: parseInt(scholarshipAmount, 10),
-          },
-        },
-      });
-    }
-
-    // Lookup to join ProgramMapped with College collection
-    pipeline.push({
-      $lookup: {
-        from: "colleges",
-        localField: "college_id",
-        foreignField: "_id",
-        as: "college",
-      },
-    });
-
-    // Unwind the college array
-    pipeline.push({ $unwind: "$college" });
-
-    // Pagination
-    const pageNumber = parseInt(page, 10) || 1;
-    const limitNumber = parseInt(limit, 10) || 50;
-    pipeline.push({ $skip: (pageNumber - 1) * limitNumber });
-    pipeline.push({ $limit: limitNumber });
-
-    // Projection
-    pipeline.push({
-      $project: {
-        program_id: 1,
-        department_id: 1,
-        stream_id: 1,
-        tag: 1,
-        fees: 1,
-        duration: 1,
-        "college.name": 1,
-        "college.city": 1,
-        "college.state": 1,
-        "college.ranking": 1,
-        "college.placement_details.highest_package": 1,
-        "college.placement_details.avg_package": 1,
-        "college.scholarship_details": 1,
-      },
-    });
-
-    // Execute aggregation pipeline
-    const results = await mongoose.model("ProgramMapped").aggregate(pipeline);
-
-    if (!results || results.length === 0) {
+    // If no results were found
+    if (queryResults.length === 0) {
       return res.status(404).json({
         status: false,
-        message: "No search results found",
+        message: `No results found in ${table} for the search term "${search}"`,
         data: [],
       });
     }
 
+    // Return the results from the selected table
     return res.status(200).json({
       status: true,
-      message: "Search results retrieved successfully",
-      data: results,
+      message: `${table} search results retrieved successfully.`,
+      data: queryResults,
     });
+
   } catch (error) {
     console.error("Search function error:", error);
-    res.status(500).json({
+    return res.status(500).json({
       status: false,
       message: "An error occurred during search.",
       data: error.message,

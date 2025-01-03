@@ -11,27 +11,35 @@ const login = async (req, res) => {
   try {
     // Check if the user exists and is active
     const user = await User.findOne({ email, status: true });
-   
+    
     if (!user) {
-      return res
-        .status(400)
-        .json({ status: false, message: "User Not Found or Inactive!", data: false });
+      return res.status(400).json({ 
+        status: false, 
+        message: "User Not Found or Inactive!", 
+        data: false 
+      });
     }
+
+    // Log user and password details for debugging (remove later)
+    console.log('User:', user);
+    console.log('Input Password:', password);
+    console.log('Hashed Password:', user.password);
 
     // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res
-        .status(400)
-        .json({ status: false, message: "Password Not Match!", data: false });
+      return res.status(400).json({ 
+        status: false, 
+        message: "Password Not Match!", 
+        data: false 
+      });
     }
-
 
     // Create JWT token
     const token = jwt.sign(
       { id: user._id, username: user.username, role: user.role },
       JWT_SECRET_KEY,
-      { expiresIn: '1h' } 
+      { expiresIn: '1h' }
     );
 
     // Remove the password field before sending the response
@@ -41,13 +49,16 @@ const login = async (req, res) => {
     return res.status(200).json({
       status: true,
       message: "User Logged In Successfully",
-      data: {user:userWithoutPassword , token },
+      data: { user: userWithoutPassword, token },
     });
+
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({ status: false, message: "Server error", data: false });
+    return res.status(500).json({ 
+      status: false, 
+      message: "Server error", 
+      data: false 
+    });
   }
 };
 

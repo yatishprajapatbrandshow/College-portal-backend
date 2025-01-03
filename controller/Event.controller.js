@@ -1,26 +1,27 @@
-const { Affiliation } = require('../models');
+const { Event } = require('../models');
 
-// Create a new Affiliation
-const createAffiliation = async (req, res) => {
+// Create a new Event
+const createEvent = async (req, res) => {
   try {
-    const { name, short_name, description, status } = req.body;
+    const { title, description, date, status, images } = req.body;
 
-    // Create a new affiliation using the provided data
-    const affiliation = new Affiliation({
-      name,
-      short_name,
+    // Create a new event using the provided data
+    const event = new Event({
+      title,
       description,
+      date,
       status,
+      images,
     });
 
-    // Save the affiliation to the database
-    await affiliation.save();
+    // Save the event to the database
+    await event.save();
 
     // Send response with status, message, and data
     res.status(201).json({
       status: true,
-      message: "Affiliation created successfully",
-      data: affiliation,
+      message: "Event created successfully",
+      data: event,
     });
   } catch (error) {
     // Handle errors with consistent response format
@@ -32,31 +33,31 @@ const createAffiliation = async (req, res) => {
   }
 };
 
-// Get all Affiliations with Search functionality
-const getAllAffiliations = async (req, res) => {
+// Get all Events with Search functionality
+const getAllEvents = async (req, res) => {
   try {
     const { search = "" } = req.query; // Search query parameter
 
-    const filter = { deleteflag: false }; // Only fetch active affiliations
+    const filter = { deleteflag: false }; // Only fetch active events
 
     // If a search term is provided, dynamically search all fields
     if (search) {
       const searchRegex = new RegExp(search, "i"); // Case-insensitive regex
       filter.$or = [
-        { name: { $regex: searchRegex } },
-        { short_name: { $regex: searchRegex } },
+        { title: { $regex: searchRegex } },
         { description: { $regex: searchRegex } },
+        { date: { $regex: searchRegex } },
         { status: { $regex: searchRegex } },
       ];
     }
 
-    // Fetch affiliations based on the filter (search term, deleteflag: false)
-    const affiliations = await Affiliation.find(filter);
+    // Fetch events based on the filter (search term, deleteflag: false)
+    const events = await Event.find(filter);
 
-    if (affiliations.length === 0) {
+    if (events.length === 0) {
       return res.status(404).json({
         status: false,
-        message: "No affiliations found.",
+        message: "No events found.",
         data: null,
       });
     }
@@ -64,8 +65,8 @@ const getAllAffiliations = async (req, res) => {
     // Send response with status, message, and data
     res.status(200).json({
       status: true,
-      message: "Affiliations fetched successfully",
-      data: affiliations,
+      message: "Events fetched successfully",
+      data: events,
     });
   } catch (error) {
     // Handle errors with consistent response format
@@ -77,15 +78,15 @@ const getAllAffiliations = async (req, res) => {
   }
 };
 
-// Get a single Affiliation by ID
-const getAffiliationById = async (req, res) => {
+// Get a single Event by ID
+const getEventById = async (req, res) => {
   try {
-    const affiliation = await Affiliation.findById(req.params.id);
+    const event = await Event.findById(req.params.id);
 
-    if (!affiliation || affiliation.deleteflag) {
+    if (!event || event.deleteflag) {
       return res.status(404).json({
         status: false,
-        message: "Affiliation not found.",
+        message: "Event not found.",
         data: null,
       });
     }
@@ -93,8 +94,8 @@ const getAffiliationById = async (req, res) => {
     // Send response with status, message, and data
     res.status(200).json({
       status: true,
-      message: "Affiliation fetched successfully",
-      data: affiliation,
+      message: "Event fetched successfully",
+      data: event,
     });
   } catch (error) {
     // Handle errors with consistent response format
@@ -106,19 +107,19 @@ const getAffiliationById = async (req, res) => {
   }
 };
 
-// Update an Affiliation
-const updateAffiliation = async (req, res) => {
+// Update an Event
+const updateEvent = async (req, res) => {
   try {
-    const affiliation = await Affiliation.findByIdAndUpdate(
+    const event = await Event.findByIdAndUpdate(
       req.params.id,
       req.body,
       { new: true, runValidators: true }
     );
 
-    if (!affiliation) {
+    if (!event) {
       return res.status(404).json({
         status: false,
-        message: "Affiliation not found.",
+        message: "Event not found.",
         data: null,
       });
     }
@@ -126,8 +127,8 @@ const updateAffiliation = async (req, res) => {
     // Send response with status, message, and data
     res.status(200).json({
       status: true,
-      message: "Affiliation updated successfully",
-      data: affiliation,
+      message: "Event updated successfully",
+      data: event,
     });
   } catch (error) {
     // Handle errors with consistent response format
@@ -139,19 +140,19 @@ const updateAffiliation = async (req, res) => {
   }
 };
 
-// Soft delete an Affiliation (Set deleteflag to true)
-const deleteAffiliation = async (req, res) => {
+// Soft delete an Event (Set deleteflag to true)
+const deleteEvent = async (req, res) => {
   try {
-    const affiliation = await Affiliation.findByIdAndUpdate(
+    const event = await Event.findByIdAndUpdate(
       req.params.id,
       { deleteflag: true },
       { new: true }
     );
 
-    if (!affiliation) {
+    if (!event) {
       return res.status(404).json({
         status: false,
-        message: "Affiliation not found.",
+        message: "Event not found.",
         data: null,
       });
     }
@@ -159,7 +160,7 @@ const deleteAffiliation = async (req, res) => {
     // Send response with status, message, and data
     res.status(200).json({
       status: true,
-      message: "Affiliation deleted successfully",
+      message: "Event deleted successfully",
       data: null,
     });
   } catch (error) {
@@ -173,9 +174,9 @@ const deleteAffiliation = async (req, res) => {
 };
 
 module.exports = {
-  createAffiliation,
-  getAllAffiliations,
-  getAffiliationById,
-  updateAffiliation,
-  deleteAffiliation,
+  createEvent,
+  getAllEvents,
+  getEventById,
+  updateEvent,
+  deleteEvent,
 };

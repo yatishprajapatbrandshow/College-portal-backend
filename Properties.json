@@ -1,0 +1,227 @@
+{
+  "property_id": "ObjectId",               // Unique identifier for the property
+  "name": "String",                        // Name of the property
+  "location": {                            // Location details
+    "address": "String",                   // Street address
+    "city": "String",                      // City name
+    "postal_code": "String",               // Postal/ZIP code
+    "latitude": "Number",                  // Latitude for geolocation
+    "longitude": "Number"                  // Longitude for geolocation
+  },
+  "type": {                                // Type of accommodation
+    "category": "String",                   // e.g., Studio, Ensuite, Shared Room
+    "room_options": [                       // Array of room options available
+      {
+        "room_type": "String",              // Type of room (e.g., single, double)
+        "price_per_week": "Number",         // Weekly rent for the room
+        "availability": "Boolean",           // Availability status (true/false)
+        "amenities": [                       // List of amenities for the room
+          "String"
+        ]
+      }
+    ]
+  },
+  "common_areas": {                        // Common area amenities
+    "kitchen": {
+      "available": "Boolean",
+      "shared": "Boolean"                   // Indicates if the kitchen is shared or private
+    },
+    "laundry": {
+      "available": "Boolean",
+      "type": ["String"]                    // Types of laundry facilities (e.g., washer/dryer)
+    },
+    "study_area": {
+      "available": "Boolean",
+      "capacity": Number                     // Number of students that can use the study area
+    },
+    "gym": {
+      "available": "Boolean",
+      "equipment": ["String"]                // List of gym equipment available
+    },
+    "common_room": {
+      "available": "Boolean",
+      "features": ["String"]                 // Features of the common room (e.g., TV, games)
+    }
+  },
+  "facilities": {                          // Additional facilities available at the property
+    "wifi": {                               // Internet connectivity details
+      "available": "Boolean",
+      "speed_mbps": Number                  // Speed of the internet connection in Mbps
+    },
+    "heating_cooling": {
+      "heating_type": ["String"],           // Types of heating (e.g., central, electric)
+      "cooling_type": ["String"]             // Types of cooling (e.g., air conditioning)
+    },
+    "parking": {
+      "available": "Boolean",
+      "type": ["String"]                     // Types of parking available (e.g., street, garage)
+    }
+  },
+  “description”: {                         // Detailed description of the property
+    “short_description”: “String”,          // A brief overview of the property
+    “long_description”: “String”            // A detailed description providing more information about amenities and features
+  },
+  “images”: [                              // Array of image URLs for the property
+    {
+      “url”: “String”,                      // URL to the image file
+      “description”: “String”               // Description or caption for the image (optional)
+    }
+  ],
+  “reviews”: [                             // Array of reviews from students about the property
+    {
+      "_id": ObjectId,                     // Unique identifier for each review
+      “student_id”: ObjectId,               // Reference to student who reviewed the property
+      “rating”: Number,                      // Rating out of 5 given by the student
+      “comment”: String,                     // Review comment text from the student
+      “date_posted”: Date                    // Date when review was posted
+    }
+  ],
+  “created_at”: Date,                      // Timestamp when the property was added to the database
+  “updated_at”: Date                       // Timestamp when the property details were last updated
+}
+
+
+//For Casita
+
+
+{
+  "property_id": "ObjectId",         // Unique identifier for the property
+  "name": "String",                  // Name of the property
+  "location": {                      // Location details
+    "address": "String",             // Street address
+    "city": "String",                // City name
+    "postal_code": "String",         // Postal/ZIP code
+    "latitude": "Number",            // Latitude for geolocation
+    "longitude": "Number"            // Longitude for geolocation
+  },
+  "type": {                          // Type of accommodation
+    "category": "String",             // e.g., Studio, Ensuite, Shared Flat
+    "room_options": [                 // Array of room options available
+      {
+        "room_type": "String",        // Type of room (e.g., single, double)
+        "price_per_week": "Number",   // Weekly rent for the room
+        "availability": "Boolean",     // Availability status (true/false)
+        "amenities": [                 // List of amenities for the room
+          "String"
+        ]
+      }
+    ]
+  },
+  "common_areas": {                  // Common area amenities
+    "kitchen": "Boolean",
+    "laundry": "Boolean",
+    "study_area": "Boolean",
+    "gym": "Boolean",
+    "common_room": "Boolean"
+  },
+  "facilities": {                    // Additional facilities available at the property
+    "wifi": {                         // Internet connectivity details
+      "available": "Boolean",
+      "speed_mbps": "Number"
+    },
+    "heating_cooling": {
+      "heating_type": ["String"],     // Types of heating (e.g., central, electric)
+      "cooling_type": ["String"]       // Types of cooling (e.g., air conditioning)
+    },
+    "parking": {
+      "available": "Boolean",
+      "type": ["String"]               // Types of parking available (e.g., street, garage)
+    }
+  },
+  "description": {                   // Detailed description of the property
+    "short_description": "String",
+    "long_description": "String"
+  },
+  "images": [                        // Array of image URLs for the property
+    {
+      "url": "String",
+      "description": "String"         // Description of the image (optional)
+    }
+  ],
+  “reviews”: [                       // Array of reviews from students
+    {
+      "_id": ObjectId,
+      “student_id”: ObjectId,         // Reference to student who reviewed
+      “rating”: Number,                // Rating out of 5
+      “comment”: String,               // Review comment text
+      “date_posted”: Date              // Date when review was posted
+    }
+  ],
+  “created_at”: Date,                // Timestamp when the property was added
+  “updated_at”: Date                 // Timestamp when the property was last updated
+}
+
+
+//For UniAcco
+
+{
+  "property_id": "ObjectId",         // Unique identifier for the property
+  "name": "String",                  // Name of the property
+  "location": {                      // Location details
+    "address": "String",             // Street address
+    "city": "String",                // City name
+    "postal_code": "String",         // Postal/ZIP code
+    "latitude": "Number",            // Latitude for geolocation
+    "longitude": "Number"            // Longitude for geolocation
+  },
+  "type": {                          // Type of accommodation
+    "category": "String",             // e.g., Studio, Ensuite, Non-Ensuite, Shared Apartment
+    "room_options": [                 // Array of room options available
+      {
+        "room_type": "String",        // Type of room (e.g., single, double)
+        "price_per_week": "Number",   // Weekly rent for the room
+        "availability": "Boolean",     // Availability status (true/false)
+        "amenities": [                 // List of amenities for the room
+          "String"
+        ]
+      }
+    ]
+  },
+  "common_areas": {                  // Common area amenities
+    "kitchen": "Boolean",
+    "laundry": "Boolean",
+    "study_area": "Boolean",
+    "gym": "Boolean",
+    "common_room": "Boolean"
+  },
+  "facilities": {                    // Additional facilities available at the property
+    "wifi": {                         // Internet connectivity details
+      "available": "Boolean",
+      "speed_mbps": "Number"
+    },
+    "heating_cooling": {
+      "heating_type": ["String"],     // Types of heating (e.g., central, electric)
+      "cooling_type": ["String"]       // Types of cooling (e.g., air conditioning)
+    },
+    "parking": {
+      "available": "Boolean",
+      "type": ["String"]               // Types of parking available (e.g., street, garage)
+    }
+  },
+  "description": {                   // Detailed description of the property
+    "short_description": "String",
+    "long_description": "String"
+  },
+  "images": [                        // Array of image URLs for the property
+    {
+      "url": "String",
+      "description": "String"         // Description of the image (optional)
+    }
+  ],
+  “reviews”: [                       // Array of reviews from students
+    {
+      "_id": ObjectId,
+      “student_id”: ObjectId,         // Reference to student who reviewed
+      “rating”: Number,                // Rating out of 5
+      “comment”: String,               // Review comment text
+      “date_posted”: Date              // Date when review was posted
+    }
+  ],
+  “created_at”: Date,                // Timestamp when the property was added
+  “updated_at”: Date                 // Timestamp when the property was last updated
+}
+
+
+
+
+
