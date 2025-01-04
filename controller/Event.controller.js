@@ -1,37 +1,56 @@
 const { Event } = require('../models');
 
-// Create a new Event
 const createEvent = async (req, res) => {
   try {
-    const { title, description, date, status, images } = req.body;
+    const { title, description, date, event_type, images, status } = req.body;
 
-    // Create a new event using the provided data
+    // Ensure the event_type is being passed correctly
+    if (!event_type) {
+      return res.status(400).json({
+        status: false,
+        message: "Event type is required",
+        data: null,
+      });
+    }
+
+    // Create the event with the data from the request body
     const event = new Event({
       title,
       description,
       date,
-      status,
+      event_type,   // This should be properly passed
       images,
+      status,
     });
 
     // Save the event to the database
     await event.save();
 
-    // Send response with status, message, and data
+    // Send success response
     res.status(201).json({
       status: true,
       message: "Event created successfully",
       data: event,
     });
   } catch (error) {
-    // Handle errors with consistent response format
+    // Handle validation errors
+    if (error.name === "ValidationError") {
+      return res.status(400).json({
+        status: false,
+        message: error.message,
+        data: null,
+      });
+    }
+
+    // Handle other errors (e.g., database issues)
     res.status(500).json({
       status: false,
-      message: error.message,
+      message: "Internal server error",
       data: null,
     });
   }
 };
+
 
 // Get all Events with Search functionality
 const getAllEvents = async (req, res) => {
