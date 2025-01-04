@@ -6,7 +6,7 @@ const advertisementSchema = new mongoose.Schema(
     title: { type: String, required: true },           // Advertisement title
     description: { type: String, required: true },     // Advertisement description
     img: { 
-      type: [String],  // Array of image URLs or base64 encoded strings
+      type: [String],  
       required: true, 
     }, 
     url: { 
@@ -14,7 +14,7 @@ const advertisementSchema = new mongoose.Schema(
       required: true, 
       validate: {
         validator: function(value) {
-          // Validate URL format (basic validation for now)
+        
           return /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/gm.test(value);
         },
         message: "Invalid URL format.",
