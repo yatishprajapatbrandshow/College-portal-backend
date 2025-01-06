@@ -9,6 +9,7 @@ const User = require("./User.model");
 const Affiliation = require("./Affiliation.model");
 const Event = require("./Event.model");
 const Advertisement = require("./Advertisement.model");
+const ApiKey = require("./ApiKey.model");
 
 module.exports = {
   College,
@@ -21,5 +22,6 @@ module.exports = {
   User,
   Affiliation,
   Event,
-  Advertisement
+  Advertisement,
+  ApiKey
 }
