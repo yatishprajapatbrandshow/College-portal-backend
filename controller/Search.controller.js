@@ -22,10 +22,8 @@ const search = async (req, res) => {
           "name", 
           "city", 
           "state", 
-          "established_year", 
           "affiliated_university", 
           "college_type", 
-          "ranking", 
           "accreditation", 
           "placement_details.highest_package", 
           "placement_details.avg_package", 
@@ -68,16 +66,59 @@ const search = async (req, res) => {
     // Dynamically create the query for the selected table
     const searchQuery = {
       $or: selectedTable.fields.map(field => {
-        // Add support for nested fields (e.g., "placement_details.highest_package")
-        return { [field]: searchRegex };
-      })
+        // Handle fields with nested structure, such as placement_details.highest_package
+        if (field.includes('.')) {
+          const [parentField, childField] = field.split('.');
+
+          // Handle numeric fields specifically
+          if (models.College.schema.paths[field].instance === "Number") {
+            // If the search is a valid number, search for the exact number
+            if (!isNaN(Number(search))) {
+              return { [`${parentField}.${childField}`]: Number(search) };
+            } else {
+              return {}; // Skip numeric field if search term is not a valid number
+            }
+          } else if (models.College.schema.paths[field].instance === "Boolean") {
+            // Handle Boolean fields (true/false)
+            const boolSearch = search.toLowerCase() === "true" ? true : search.toLowerCase() === "false" ? false : null;
+            if (boolSearch !== null) {
+              return { [`${parentField}.${childField}`]: boolSearch };
+            }
+            return {}; // Skip if invalid boolean search
+          } else {
+            return { [`${parentField}.${childField}`]: searchRegex }; // For strings, apply regex
+          }
+        }
+
+        // Handle numeric fields
+        if (models.College.schema.paths[field]?.instance === "Number") {
+          // If the search term is a number, search for the exact match
+          if (!isNaN(Number(search))) {
+            return { [field]: Number(search) };
+          } else {
+            return {}; // Skip this field if it's a number but the search term is not a number
+          }
+        }
+
+        // Handle Boolean fields (true/false)
+        if (models.College.schema.paths[field]?.instance === "Boolean") {
+          const boolSearch = search.toLowerCase() === "true" ? true : search.toLowerCase() === "false" ? false : null;
+          if (boolSearch !== null) {
+            return { [field]: boolSearch };
+          }
+          return {}; // Skip if invalid boolean search
+        } else {
+          // Apply regex to string fields
+          return { [field]: searchRegex };
+        }
+      }).filter(query => Object.keys(query).length > 0) // Remove empty query objects
     };
 
     // Query the selected table
     const queryResults = await selectedTable.model.find(searchQuery)
-      .skip((page - 1) * limit)
-      .limit(Number(limit)) // Ensure that limit is a number
-      .sort({ [sort]: 1 }); // Sort by the given field, default is 'name'
+      .skip((page - 1) * limit)  // Skip for pagination
+      .limit(Number(limit)) // Limit results
+      .sort({ [sort]: 1 }); // Sort results by the given field (default 'name')
 
     // If no results were found
     if (queryResults.length === 0) {

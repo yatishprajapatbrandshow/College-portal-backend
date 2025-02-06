@@ -13,7 +13,7 @@ app.use(cors()); // To parse JSON request bodies
 app.use(express.json()); // To parse JSON request bodies
 
 // Import Routers
-const { CollegeRouter, ProgramRouter, AccommodationRouter, StreamRouter, AdminRouter, UserRouter, AffiliationRouter, DepartmentsRouter, SearchRouter,EventRouter , AdvertisementRouter } = require("./routes"); 
+const { CollegeRouter, ProgramRouter, AccommodationRouter, StreamRouter, AdminRouter, UserRouter, AffiliationRouter, DepartmentsRouter, SearchRouter,EventRouter , AdvertisementRouter , ApiRouter } = require("./routes"); 
 
 const validateApiKey = require('./middlewares/authenticateMiddleware');
 app.use(validateApiKey); // Ensure all routes are authenticated
@@ -30,6 +30,7 @@ app.use("/api/departments", DepartmentsRouter);
 app.use("/api/search" , SearchRouter);
 app.use("/api/events" , EventRouter);
 app.use("/api/advertisement" , AdvertisementRouter);
+app.use("/api/",ApiRouter);
 
 // Routes Ended
 

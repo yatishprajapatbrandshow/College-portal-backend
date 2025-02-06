@@ -9,6 +9,7 @@ const DepartmentsRouter = require("./Department.router");
 const SearchRouter = require("./Search.router");
 const EventRouter = require("./Event.router");
 const AdvertisementRouter = require("./Advertisement.router");
+const ApiRouter = require("./ApiKey.router");
 
 module.exports = {
   CollegeRouter,
@@ -21,5 +22,6 @@ module.exports = {
   DepartmentsRouter,
   SearchRouter,
   EventRouter,
-  AdvertisementRouter
+  AdvertisementRouter,
+  ApiRouter
 };
