@@ -10,6 +10,7 @@ const SearchController = require("./Search.controller");
 const EventController = require("./Event.controller");
 const AdvertisementController = require("./Advertisement.controller");
 const  ApiKeyController = require("./ApiKey.controller");
+const  HostelController = require("./Hostel.controller");
 module.exports = {
   CollegeController,
   ProgramController,
@@ -22,5 +23,6 @@ module.exports = {
   SearchController,
   EventController,
   AdvertisementController,
-  ApiKeyController
+  ApiKeyController,
+  HostelController
 };

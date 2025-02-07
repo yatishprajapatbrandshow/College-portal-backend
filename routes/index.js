@@ -10,6 +10,7 @@ const SearchRouter = require("./Search.router");
 const EventRouter = require("./Event.router");
 const AdvertisementRouter = require("./Advertisement.router");
 const ApiRouter = require("./ApiKey.router");
+const HostelRouter = require("./Hostel.router");
 
 module.exports = {
   CollegeRouter,
@@ -23,5 +24,6 @@ module.exports = {
   SearchRouter,
   EventRouter,
   AdvertisementRouter,
-  ApiRouter
+  ApiRouter,
+  HostelRouter
 };

@@ -40,7 +40,7 @@ const createDepartment = async (req, res) => {
 // Get all departments with optional search functionality
 const getAllDepartments = async (req, res) => {
   try {
-    const { search = "" } = req.query;  // Capture search query parameter
+    const { search = "" } = req.query;  
 
     // Initialize the filter to check for non-deleted departments
     const filter = { deleteflag: false };
