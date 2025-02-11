@@ -11,6 +11,10 @@ const Event = require("./Event.model");
 const Advertisement = require("./Advertisement.model");
 const ApiKey = require("./ApiKey.model");
 const Hostel = require("./Hostel.model");
+const Review = require("./Review.model");
+const Booking = require("./Booking.model");
+const Testimonial = require("./Testimonial.model");
+const PopularCollege = require("./PopularCollege.model");
 
 module.exports = {
   College,
@@ -25,5 +29,10 @@ module.exports = {
   Event,
   Advertisement,
   ApiKey,
-  Hostel
+  Hostel,
+  Review,
+  Booking,
+  Testimonial,
+  PopularCollege
+
 }

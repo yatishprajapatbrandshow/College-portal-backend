@@ -11,6 +11,10 @@ const EventController = require("./Event.controller");
 const AdvertisementController = require("./Advertisement.controller");
 const  ApiKeyController = require("./ApiKey.controller");
 const  HostelController = require("./Hostel.controller");
+const  ReviewController = require("./Review.controller");
+const  BookingController = require("./Booking.controller");
+const TestimonialController = require("./Testimonial.controller");
+const PopularCollegeController = require("./PopularCollege.controller");
 module.exports = {
   CollegeController,
   ProgramController,
@@ -24,5 +28,9 @@ module.exports = {
   EventController,
   AdvertisementController,
   ApiKeyController,
-  HostelController
+  HostelController,
+  ReviewController,
+  BookingController,
+  TestimonialController,
+  PopularCollegeController
 };

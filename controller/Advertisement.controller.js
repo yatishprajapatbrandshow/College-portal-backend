@@ -1,7 +1,7 @@
-const  {Advertisement} = require('../models'); 
+const { Advertisement } = require('../models');
 
 // Create a new advertisement
- const createAdvertisement = async (req, res) => {
+const createAdvertisement = async (req, res) => {
   try {
     const newAd = new Advertisement(req.body);
     await newAd.save();
@@ -20,14 +20,44 @@ const  {Advertisement} = require('../models');
   }
 };
 
-// Get all advertisements
+// Get all advertisements with search and filter functionality
 const getAllAdvertisements = async (req, res) => {
   try {
-    const advertisements = await Advertisement.find({ deleteflag: false }); // Exclude soft deleted ads
+    const { title, category, location, minPrice, maxPrice, status, startDate, endDate } = req.query;
+
+    // Build search filter
+    const filter = { deleteflag: false }; // Exclude soft deleted ads by default
+    
+    // Search by title, category, location (case-insensitive regex search)
+    if (title) filter.title = { $regex: title, $options: 'i' };
+    if (category) filter.category = { $regex: category, $options: 'i' };
+    if (location) filter.location = { $regex: location, $options: 'i' };
+
+    // Filter by price range (assuming 'price' is a field in your model)
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = parseFloat(minPrice);
+      if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
+    }
+
+    // Filter by status (e.g., active or inactive)
+    if (status) filter.status = { $regex: status, $options: 'i' };
+
+    // Filter by date range (assuming 'createdAt' is a field in your model)
+    if (startDate || endDate) {
+      filter.createdAt = {};
+      if (startDate) filter.createdAt.$gte = new Date(startDate);
+      if (endDate) filter.createdAt.$lte = new Date(endDate);
+    }
+
+    const advertisements = await Advertisement.find(filter);
+
     res.status(200).json({
       res: true,
       status: 200,
-      msg: 'Advertisements fetched successfully',
+      msg: advertisements.length
+        ? 'Advertisements fetched successfully'
+        : 'No advertisements found matching your criteria',
       advertisements: advertisements
     });
   } catch (error) {
@@ -118,9 +148,9 @@ const deleteAdvertisement = async (req, res) => {
 };
 
 module.exports = {
-  createAdvertisement ,
+  createAdvertisement,
   getAllAdvertisements,
-  getAdvertisementById ,
+  getAdvertisementById,
   updateAdvertisement,
-  deleteAdvertisement 
+  deleteAdvertisement
 };

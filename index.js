@@ -13,11 +13,12 @@ app.use(cors()); // To parse JSON request bodies
 app.use(express.json()); // To parse JSON request bodies
 
 // Import Routers
-const { CollegeRouter, ProgramRouter, AccommodationRouter, StreamRouter, AdminRouter, UserRouter, AffiliationRouter, DepartmentsRouter, SearchRouter,EventRouter , AdvertisementRouter , ApiRouter, HostelRouter } = require("./routes"); 
+const { CollegeRouter, ProgramRouter, AccommodationRouter, StreamRouter, AdminRouter, UserRouter, AffiliationRouter, 
+  DepartmentsRouter, SearchRouter,EventRouter , AdvertisementRouter , ApiRouter, HostelRouter,  ReviewRouter ,BookingRouter, TestimonialRouter , PopularCollegeRouter} = require("./routes"); 
 
 const validateApiKey = require('./middlewares/authenticateMiddleware');
-const { HostelController } = require("./controller");
-app.use(validateApiKey); // Ensure all routes are authenticated
+
+app.use(validateApiKey); 
 
 // Routes Started
 app.use("/api/college", CollegeRouter);
@@ -31,10 +32,14 @@ app.use("/api/departments", DepartmentsRouter);
 app.use("/api/search" , SearchRouter);
 app.use("/api/events" , EventRouter);
 app.use("/api/advertisement" , AdvertisementRouter);
-app.use("/api",ApiRouter);
+app.use("/api", ApiRouter);
 app.use("/api/hostel", HostelRouter);
+app.use("api/review", ReviewRouter);
+app.use("/api/booking", BookingRouter);
+app.use("/api/testimonial", TestimonialRouter);
+app.use("/api/popularCollege", PopularCollegeRouter);
 
-// Routes Ended
+
 
 // Start the server
 app.listen(PORT || 3000, () => {
