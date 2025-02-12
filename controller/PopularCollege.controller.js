@@ -1,9 +1,10 @@
-const  { PopularCollege } = require('../models');  // Assuming your model file is in models/PopularCollege.js
+const { PopularCollege } = require('../models');  // Assuming your model file is in models/PopularCollege.js
 
 // CREATE - Add a new college
 const createPopularCollege = async (req, res) => {
     try {
-        const newCollege = new PopularCollege(req.body);
+        const { img, ...otherFields } = req.body;  // Destructure img field and other fields
+        const newCollege = new PopularCollege({ ...otherFields, img: img || [] }); // Assign img array (default to empty array if not provided)
         const savedCollege = await newCollege.save();
         res.status(201).json({ message: 'College added successfully', college: savedCollege });
     } catch (error) {
@@ -72,7 +73,12 @@ const getPopularCollegeById = async (req, res) => {
 // UPDATE - Update a college by ID
 const updatePopularCollege = async (req, res) => {
     try {
-        const updatedCollege = await PopularCollege.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const { img, ...otherFields } = req.body;  // Destructure img field and other fields
+        const updatedCollege = await PopularCollege.findByIdAndUpdate(
+            req.params.id,
+            { ...otherFields, img: img || [] },  // Update img array (default to empty array if not provided)
+            { new: true }
+        );
         if (!updatedCollege) {
             return res.status(404).json({ message: 'College not found' });
         }
@@ -101,5 +107,4 @@ module.exports = {
     getPopularCollegeById,
     updatePopularCollege,
     deletePopularCollege
-
 }

@@ -58,6 +58,10 @@ const PopularCollegeSchema = new mongoose.Schema({
     email: { 
         type: String 
     }, // Email address
+    img: { 
+        type: [String], // Array of image URLs (or file paths)
+        trim: true 
+    }, // Array of images (URLs or file paths)
 }, {
     timestamps: true // Automatically add createdAt and updatedAt fields
 });
